@@ -9,13 +9,19 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 // Initilize datastore
 datastore = {};
 
+// Root path
 app.get('/', function (req, res) {
   var response = 'TinyWebDB by Nizar AYED<br>\n';
   response += 'Datastore: <br>\n' + JSON.stringify( datastore );
   res.send( response );
 })
 
-app.post('/storevalue', function (req, res) {
+// Store a Value path
+// Path :   /storeavalue
+// Params : tag
+// params : value
+// Method : POST
+app.post('/storeavalue', function (req, res) {
   try {
     var tag   = req.query.tag;
     var value = req.query.value;
@@ -28,7 +34,7 @@ app.post('/storevalue', function (req, res) {
   catch( err ) {
     msg = {
       error : err,
-      query : req.quey,
+      query : req.query,
       body : req.body
     }
     res.json( msg ); 
