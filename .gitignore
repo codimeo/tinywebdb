@@ -1,3 +1,6 @@
+# Update Production Git script
+update-prod-git.sh
+
 # Logs
 logs
 *.log
