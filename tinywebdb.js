@@ -29,7 +29,7 @@ app.post('/storeavalue', function (req, res) {
     if( value == null ) value = '';
     datastore[ tag ] = value;
     console.log( "Tag: %s\nValue:%s\nDatastore : \n%s", tag, value, JSON.stringify( datastore ) );
-    res.json( datastore );
+    res.json( [ "STORED", req.query.tag, datastore[ req.query.tag ] ] );
   }
   catch( err ) {
     msg = {
@@ -41,13 +41,13 @@ app.post('/storeavalue', function (req, res) {
   }
 })
 
-app.get('/getvalue', function (req, res) {
+app.post('/getvalue', function (req, res) {
   // Uncomment the following to debug
   // console.log( "Tag : %s", req.query.tag );
   // console.log( "DataStore : %s", JSON.stringify( datastore ) );
   try {
     if( req.query.tag == null || !req.query.tag ) throw 'Tag is missing.';
-    res.json( datastore[ req.query.tag ] );
+    res.json( [ "VALUE", req.query.tag, datastore[ req.query.tag ] ] );
   } catch ( err ) {
     msg = {
       error : err,
