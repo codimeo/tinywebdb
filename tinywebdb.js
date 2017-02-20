@@ -6,6 +6,12 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 // Initilize datastore
 datastore = {};
 
@@ -23,13 +29,14 @@ app.get('/', function (req, res) {
 // Method : POST
 app.post('/storeavalue', function (req, res) {
   try {
-    var tag   = req.query.tag;
-    var value = req.query.value;
+    var tag   = req.query.tag || req.body.tag;
+    var value = req.query.value || req.body.value;
     if( tag == null ) throw 'Tag is missing';
     if( value == null ) value = '';
-    datastore[ tag ] = value;
+    datastore[tag] = value;
     console.log( "Tag: %s\nValue:%s\nDatastore : \n%s", tag, value, JSON.stringify( datastore ) );
-    res.json( [ "STORED", req.query.tag, datastore[ req.query.tag ] ] );
+    res.type('application/json');
+    res.send( ["STORED", tag, datastore[tag]] );
   }
   catch( err ) {
     msg = {
@@ -37,7 +44,7 @@ app.post('/storeavalue', function (req, res) {
       query : req.query,
       body : req.body
     }
-    res.json( msg ); 
+    res.status(500).json( msg ); 
   }
 })
 
@@ -46,15 +53,17 @@ app.post('/getvalue', function (req, res) {
   // console.log( "Tag : %s", req.query.tag );
   // console.log( "DataStore : %s", JSON.stringify( datastore ) );
   try {
-    if( req.query.tag == null || !req.query.tag ) throw 'Tag is missing.';
-    res.json( [ "VALUE", req.query.tag, datastore[ req.query.tag ] ] );
+    var tag = req.query.tag || req.body.tag;
+    if( tag == null ) throw 'Tag is missing.';
+    res.type('application/json');
+    res.json( [ "VALUE", tag, (datastore[tag] || "") ] );
   } catch ( err ) {
     msg = {
       error : err,
       query : req.quey,
       body : req.body
     };
-    res.json( msg ); 
+    res.status(500).json( msg ); 
   }
 })
 
