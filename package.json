@@ -7,11 +7,9 @@
   "dependencies": {
     "body-parser": "^1.15.2",
     "cookie-parser": "^1.4.3",
-    "express": "^4.14.0",
-    "multer": "^1.2.0"
+    "express": "^4.14.0"
   },
   "description": "AppInventor dedicated tinywebstore",
-  "devDependencies": {},
   "directories": {},
   "engines": {
     "node": ">= 0.10.0"
